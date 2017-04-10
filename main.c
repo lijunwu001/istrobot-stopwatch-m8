@@ -55,10 +55,10 @@ void cal() {
 }
 
 void sm() {
-	char n = '\n';
+	char n = '\n';   
+	int x = 0;
 	while (1) {
-		int x = 0;
-		start: x = read_adc();
+		label1: x = read_adc();
 		while (x >= iv)
 			x = read_adc();
 
@@ -68,7 +68,7 @@ void sm() {
 
 		while (x < iv)
 			x = read_adc();
-		
+		_delay_ms(1000);
 		while (x >= iv) {
 			x = read_adc();
 			if (bp()) {
@@ -78,7 +78,7 @@ void sm() {
 				uart_send(n);
 				start = 0;
 				time = 0;
-				goto start;
+				goto label1;
 			}
 		}
 
