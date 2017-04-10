@@ -5,9 +5,9 @@
 
 int iv;
 char start;
-long long time;
+long time;
 
-void send(long long value) {
+void send(long value) {
 	char c = '0';
 	char x = c + (value / 100000UL);
 	uart_send(x);
@@ -57,8 +57,9 @@ void cal() {
 void sm() {
 	char n = '\n';
 	while (1) {
-		int x = read_adc();
-		start: while (x >= iv)
+		int x = 0;
+		start: x = read_adc();
+		while (x >= iv)
 			x = read_adc();
 
 		start = 1;
@@ -67,7 +68,7 @@ void sm() {
 
 		while (x < iv)
 			x = read_adc();
-
+		
 		while (x >= iv) {
 			x = read_adc();
 			if (bp()) {
