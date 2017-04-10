@@ -1,0 +1,8 @@
+# buid folder
+build
+
+# build files
+*.o
+*.obj
+*.elf
+*.hex
