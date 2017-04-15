@@ -7,6 +7,7 @@ int iv;
 int start;
 long time;
 int high;
+int reset;
 
 void send(long value) {
 	char c = '0';
@@ -59,7 +60,8 @@ void sm() {
 	char n = '\n'; 
 	int x = 0;
 	while (1) {
-		label1: 
+		label1:
+		reset = 0;
 		x = read_adc();
 		while (x >= iv){
 			x = read_adc();
@@ -89,13 +91,18 @@ void sm() {
 		uart_send('F');
 		uart_send(n);
 		start = 0;
-
-		while (!bp())
+		int reset_button = 0;
+		while (!bp() && reset == 0)
 			; // wait for reset
+			if (bp()){
+				reset_button = 1;
+			}
 		while (bp())
 			;
-		uart_send('R');
-		uart_send(n);
+		if (reset_button == 1){
+			uart_send('R');
+			uart_send(n);
+		}
 		start = 0;
 		time = 0;
 		//_delay_ms(2000);
@@ -106,6 +113,13 @@ int main(void) {
 	init();
 	cal();
 	sm();
+}
+
+ISR(USART_RXC_vect) {
+char c = UDR;
+if (c == 'R'){
+	reset = 1;
+}
 }
 
 ISR( TIMER0_OVF_vect) {
